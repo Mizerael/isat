@@ -1,0 +1,31 @@
+[project]
+name = "isat-ssu"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "Mizerael", email = "dan-acer@outlook.com" }
+]
+dependencies = [
+    "fastapi>=0.109.0",
+    "pydantic>=2.5.3",
+    "uvicorn>=0.26.0",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[project.scripts]
+hello = "isat_ssu:hello"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/isat_ssu"]
