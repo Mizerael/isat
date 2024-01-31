@@ -9,6 +9,7 @@ dependencies = [
     "fastapi>=0.109.0",
     "pydantic>=2.5.3",
     "uvicorn>=0.26.0",
+    "ruff>=0.1.14",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
