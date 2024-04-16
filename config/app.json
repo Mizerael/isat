@@ -1,0 +1,14 @@
+{
+    "query" :{
+        "link": "localhost:8080",
+        "config": "config/query.json"
+    },
+    "faiss": {
+        "link": "localhost:8072",
+        "confing": "config/faiss.json"
+    },
+    "crawler": {
+        "link": "localhost:8053",
+        "config": "config/crawler.json"
+    }
+}
