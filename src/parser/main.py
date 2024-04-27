@@ -12,7 +12,7 @@ app_config = get_config("config/app.json")
 
 logger = logging.getLogger("app")
 
-parser = FastAPI()
+app = FastAPI()
 
 logger = logging.getLogger("parser")
 
@@ -23,7 +23,7 @@ client = httpx.AsyncClient(
 )
 
 
-@parser.get(
+@app.get(
     "/get-image",
     responses={200: {"content": {"image/png": {}}}},
     response_class=Response,

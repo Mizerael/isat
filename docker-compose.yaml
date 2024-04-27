@@ -1,0 +1,10 @@
+
+services:
+  image-loader:
+    container_name: image-loader
+    build: src/parser
+    volumes:
+      - ./config:/app/config
+      - ./resources:/app/resources
+    ports:
+      - "8001:8000"
