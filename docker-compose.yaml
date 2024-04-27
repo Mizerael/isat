@@ -8,3 +8,11 @@ services:
       - ./resources:/app/resources
     ports:
       - "8001:8000"
+  complementary-colors:
+    container_name: complementary-colors
+    build: src/complementary_colors
+    volumes:
+      - ./config:/app/config
+      - ./resources:/app/resources
+    ports:
+      - "8011:8000"

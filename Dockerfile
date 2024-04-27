@@ -25,5 +25,3 @@ ENV PYTHONPATH="$PYTHONPATH:$WD_NAME/.venv/lib/python3.12/site-packages"
 COPY resources $WD_NAME/resources
 COPY --from=builder /opt/rye /opt/rye
 COPY --from=builder $WD_NAME/.venv .venv
-
-ENTRYPOINT ["uvicorn", "--app-dir", "src", "--host", "0.0.0.0", "main:app"]

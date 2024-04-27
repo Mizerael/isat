@@ -16,15 +16,15 @@ configure_logging()
 
 logger = logging.getLogger("cc")
 
-complement_color = FastAPI()
+app = FastAPI()
 
 
-@complement_color.get("/")
+@app.get("/")
 async def root():
     return {"message": "Hello World"}
 
 
-@complement_color.post("/complemented_colors")
+@app.post("/complemented_colors")
 async def compute_complement(rgb: Rgb) -> Rgb:
     hls = cv2.cvtColor(
         np.array([[[rgb.r, rgb.g, rgb.b]]], dtype=np.uint8), cv2.COLOR_RGB2HLS
