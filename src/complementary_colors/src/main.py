@@ -3,14 +3,9 @@ import cv2
 import numpy as np
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+
 from resources.config import configure_logging
-
-
-class Rgb(BaseModel):
-    r: int
-    g: int
-    b: int
+from resources.models import Rgb
 
 
 configure_logging()

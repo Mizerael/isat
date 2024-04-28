@@ -1,9 +1,11 @@
 import httpx
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import Response
+from fastapi.responses import Response, JSONResponse
 import logging
 from resources.config import configure_logging, get_config
+from resources.models import Rgb
 from utils import load_image
+import json
 
 configure_logging()
 
@@ -50,6 +52,29 @@ async def get_image(name: str):
         f"{app_config['loader']['link']}/get_image?image_name={name}"
     )
     if response.status_code == 200:
-        return response
+        return Response(response.content, media_type="image/png")
     else:
         raise HTTPException(status_code=404, detail="File not found")
+
+
+@app.get("/image_list")
+async def image_list():
+    response = await client.get(f"{app_config['loader']['link']}/image_list")
+    if response.status_code == 200:
+        content = json.loads(response.content.decode("utf-8"))
+        return JSONResponse(content=content)
+    else:
+        raise HTTPException(status_code=404, detail="Files not found")
+
+
+@app.post("/complementary_colors")
+async def complementary_colors(rgb: Rgb) -> Rgb:
+    response = await client.post(
+        f"{app_config['cc']['link']}/complemented_colors",
+        json={"r": rgb.r, "b": rgb.b, "g": rgb.g},
+        timeout=httpx.Timeout(None),
+    )
+    if response.status_code == 200:
+        return Rgb.model_construct(**response.json())
+    else:
+        raise HTTPException(status_code=404, detail="error with colors")

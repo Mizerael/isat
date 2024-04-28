@@ -19,8 +19,6 @@ services:
     volumes:
       - ./config:/app/config
       - ./resources:/app/resources
-    ports:
-      - "8011:8011"
   crawler:
     container_name: crawler
     build: src/crawler

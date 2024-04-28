@@ -3,7 +3,7 @@ import asyncio
 import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
+from fastapi.responses import Response, JSONResponse
 from bs4 import BeautifulSoup
 import logging
 from resources.config import configure_logging, get_config
@@ -12,6 +12,9 @@ configure_logging()
 
 app_config = get_config("config/app.json")
 loader_ctx = get_config(app_config["loader"]["config"])
+
+if not os.path.exists("images"):
+    os.makedirs("images")
 
 client = httpx.AsyncClient(
     headers={
@@ -34,7 +37,6 @@ logger = logging.getLogger("parser")
 
 @app.get("/load_image")
 async def load_image(link: str, exp_delay: int = 1):
-    os.makedirs("images", exist_ok=True)
     try:
         response = await client.get(link)
         if response.status_code == 200:
@@ -71,3 +73,8 @@ async def get_image(image_name: str):
     except FileNotFoundError:
         logging.error(f"Файл {image_name} не найден")
         raise HTTPException(status_code=404, detail="File not found")
+
+
+@app.get("/image_list")
+async def image_list():
+    return JSONResponse(content={"images": os.listdir("images")})
