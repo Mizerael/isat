@@ -1,5 +1,6 @@
 import httpx
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from resources.config import get_config, configure_logging
 import logging
 from utils import pages_link
@@ -12,9 +13,18 @@ steam_ctx = get_config(app_config["crawler"]["config"])
 
 app = FastAPI()
 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 logger = logging.getLogger("crawler")
 
-client = httpx.Client(
+client = httpx.AsyncClient(
     headers={
         "User-Agent": "learningProject",
     }

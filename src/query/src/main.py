@@ -52,5 +52,4 @@ async def add_to_queue(link: str):
 @app.get("/get_from_queue")
 async def get_from_queue() -> str:
     link = await queue.get()
-    queue.task_done()
     return link

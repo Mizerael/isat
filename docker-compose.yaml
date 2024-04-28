@@ -7,14 +7,16 @@ services:
       - ./resources:/app/resources
     ports:
       - "8080:8080"
-  image-loader:
-    container_name: image-loader
-    build: src/parser
+  loader:
+    container_name: loader
+    build: src/loader
     volumes:
       - ./config:/app/config
       - ./resources:/app/resources
     ports:
       - "8001:8001"
+    depends_on:
+      - query
   complementary-colors:
     container_name: complementary-colors
     build: src/complementary_colors
@@ -31,3 +33,13 @@ services:
       - ./resources:/app/resources
     ports:
       - "8053:8053"
+    depends_on:
+      - query
+  handler:
+    container_name: handler
+    build: src/handler
+    volumes:
+      - ./config:/app/config
+      - ./resources:/app/resources
+    ports:
+      - "8000:8000"

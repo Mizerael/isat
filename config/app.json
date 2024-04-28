@@ -7,14 +7,15 @@
         "confing": "config/faiss.json"
     },
     "crawler": {
-        "link": "http://crawler::8053",
+        "link": "http://crawler:8053",
         "config": "config/crawler.json"
     },
     "cc": {
         "link": "http://complementary-colors:8011"
     },
     "loader": {
-        "link": "http://image-loader:8001",
-        "config": "config/loader.json"
+        "link": "http://loader:8001",
+        "config": "config/loader.json",
+        "count_worker": 3
     }
 }

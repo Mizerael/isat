@@ -6,7 +6,7 @@ import json
 
 
 async def get_items_link(
-    http_session: httpx.Client,
+    http_session: httpx.AsyncClient,
     ctx: any,
     logger: logging.Logger,
     queue_link: str,
@@ -15,7 +15,7 @@ async def get_items_link(
 ) -> None:
     i = await pages_queue.get()
     logger.info(f"GET items links from {ctx['link_xhr']}&start={i*10}")
-    response = http_session.get(
+    response = await http_session.get(
         f"{ctx['link_xhr']}&start={i*10}&count={ctx['count']}"
         + f"&search_descriptions={ctx['search_description']}"
         + f"&sort_column={ctx['sort_column']}&sort_dir={ctx['sort_dir']}"
@@ -29,7 +29,10 @@ async def get_items_link(
         for item in items:
             item_link = item.get("href")
             try:
-                http_session.post(url=queue_link + f"?link={item_link}", timeout=0.1)
+                timeout = httpx.Timeout(None)
+                await http_session.post(
+                    url=queue_link + f"?link={item_link}", timeout=timeout
+                )
             except httpx.ConnectError as e:
                 logger.error(f"POST {queue_link} {e}")
         pages_queue.task_done()
