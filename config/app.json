@@ -10,5 +10,13 @@
     "crawler": {
         "link": "localhost:8053",
         "config": "config/crawler.json"
+    },
+    "cc": {
+        "link": "localhost:8011",
+        "config": "config/crawler.json"
+    },
+    "loader": {
+        "link": "localhost:8001",
+        "config": "config/crawler.json"
     }
 }
