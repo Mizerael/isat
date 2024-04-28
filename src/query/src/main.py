@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import asyncio
 import pickle
@@ -22,6 +23,14 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 client = httpx.AsyncClient(
     headers={
         "User-Agent": "learningProject",
@@ -35,9 +44,9 @@ async def root():
 
 
 @app.post("/add_to_queue")
-async def add_to_queue(links: list[str]):
-    for link in links:
-        queue.put_nowait(link)
+async def add_to_queue(link: str):
+    await queue.put(link)
+    return "OK"
 
 
 @app.get("/get_from_queue")

@@ -1,34 +1,11 @@
 import httpx
 import asyncio
-from fastapi import FastAPI
 from fastapi.responses import Response
 from bs4 import BeautifulSoup
 import logging
-from resources.config import configure_logging, get_config
-
-configure_logging()
-
-app_config = get_config("config/app.json")
-loader_ctx = get_config(app_config["loader"]["config"])
 
 
-app = FastAPI()
-
-logger = logging.getLogger("parser")
-
-client = httpx.AsyncClient(
-    headers={
-        "User-Agent": "learningProject",
-    },
-)
-
-
-@app.get(
-    "/load_image",
-    responses={200: {"content": {"image/png": {}}}},
-    response_class=Response,
-)
-async def load_image(link: str, exp_delay: int = 1):
+async def load_image(client: httpx.AsyncClient, link: str, exp_delay: int = 1):
     try:
         response = await client.get(link)
         if response.status_code == 200:
@@ -46,3 +23,10 @@ async def load_image(link: str, exp_delay: int = 1):
         logging.error(f"{ex}")
         await asyncio.sleep(exp_delay)
         return await load_image(link, exp_delay * 2)
+
+
+async def worker(client: httpx.AsyncClient, queue_link: str):
+    while True:
+        link = await client.get(queue_link)
+        await load_image(client, link, 1)
+        await asyncio.sleep(2.0)

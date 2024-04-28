@@ -6,7 +6,7 @@ services:
       - ./config:/app/config
       - ./resources:/app/resources
     ports:
-      - "8080:8000"
+      - "8080:8080"
   image-loader:
     container_name: image-loader
     build: src/parser
@@ -14,7 +14,7 @@ services:
       - ./config:/app/config
       - ./resources:/app/resources
     ports:
-      - "8001:8000"
+      - "8001:8001"
   complementary-colors:
     container_name: complementary-colors
     build: src/complementary_colors
@@ -22,4 +22,12 @@ services:
       - ./config:/app/config
       - ./resources:/app/resources
     ports:
-      - "8011:8000"
+      - "8011:8011"
+  crawler:
+    container_name: crawler
+    build: src/crawler
+    volumes:
+      - ./config:/app/config
+      - ./resources:/app/resources
+    ports:
+      - "8053:8053"
