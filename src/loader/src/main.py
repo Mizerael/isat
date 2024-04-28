@@ -33,39 +33,33 @@ logger = logging.getLogger("parser")
 
 
 @app.get("/load_image")
-async def load_image(count: int, exp_delay: int = 1):
+async def load_image(link: str, exp_delay: int = 1):
     os.makedirs("images", exist_ok=True)
-    for _ in range(0, count):
-        link = f"{app_config['query']['link']}/get_from_queue"
-        try:
-            link = await client.get(link, timeout=httpx.Timeout(None))
-            response = await client.get(link)
+    try:
+        response = await client.get(link)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.content, "html.parser")
+            div_link = soup.find("div", class_="market_listing_largeimage")
+            image_link = div_link.find("img").get("src")
+            response = await client.get(image_link)
             if response.status_code == 200:
-                soup = BeautifulSoup(response.content, "html.parser")
-                div_link = soup.find("div", class_="market_listing_largeimage")
-                image_link = div_link.find("img").get("src")
-                response = await client.get(image_link)
-                if response.status_code == 200:
-                    image_filename = link.split("/")[-1] + ".jpg"
-                    with open(
-                        os.path.join("images", image_filename), "wb"
-                    ) as image_file:
-                        image_file.write(response.read())
-                    logging.info(f"Изображение {link} сохранено как {image_filename}")
-
-            else:
-                logging.error(f"{response.status_code} при парсинге страницы {link}")
-                await asyncio.sleep(exp_delay)
-                return await load_image(link, exp_delay * 2)
-        except Exception as ex:
-            logging.error(f"{ex}")
+                image_filename = link.split("/")[-1] + ".jpg"
+                with open(os.path.join("images", image_filename), "wb") as image_file:
+                    image_file.write(response.read())
+                logger.info(f"Изображение {link} сохранено как {image_filename}")
+                return Response("Image saved", media_type="text/plain")
+        else:
+            logging.error(f"{response.status_code} при парсинге страницы {link}")
             await asyncio.sleep(exp_delay)
-            return await load_image(link, exp_delay * 2)
-    return Response("Image saved", media_type="text/plain")
+            return await load_image(link=link, exp_delay=exp_delay * 2)
+    except Exception as ex:
+        logging.error(f"{ex}")
+        await asyncio.sleep(exp_delay)
+        return await load_image(link=link, exp_delay=exp_delay * 2)
 
 
 @app.get(
-    "/get-image",
+    "/get_image",
     responses={200: {"content": {"image/png": {}}}},
     response_class=Response,
 )

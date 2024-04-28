@@ -33,5 +33,11 @@ client = httpx.AsyncClient(
 
 @app.post("/scrape")
 async def scrape(count: int):
-    await pages_link(client, steam_ctx, logger, app_config["query"]["link"], count)
+    await pages_link(
+        http_session=client,
+        ctx=steam_ctx,
+        logger=logger,
+        queue_link=app_config["query"]["link"],
+        count_items=count,
+    )
     return {"status": f"GET {app_config['query']["link"]}  {"baoba"}"}

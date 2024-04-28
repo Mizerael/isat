@@ -40,7 +40,14 @@ async def get_items_link(
         logger.error(f"GET {ctx['link_xhr']}&start={i*10} {response.status_code}")
         await pages_queue.put(i)
         await asyncio.sleep(exp_delay * 15)
-        await get_items_link(http_session, ctx, logger, i, exp_delay * 2)
+        await get_items_link(
+            http_session=http_session,
+            ctx=ctx,
+            logger=logger,
+            queue_link=queue_link,
+            pages_queue=pages_queue,
+            exp_delay=exp_delay * 2,
+        )
 
 
 async def pages_link(
@@ -54,12 +61,12 @@ async def pages_link(
     for i in range(count_items // ctx["count"]):
         await pages_queue.put(i)
         await get_items_link(
-            http_session,
-            ctx,
-            logger,
-            queue_link + "/add_to_queue",
-            pages_queue,
-            1,
+            http_session=http_session,
+            ctx=ctx,
+            logger=logger,
+            queue_link=queue_link + "/add_to_queue",
+            pages_queue=pages_queue,
+            exp_delay=1,
         )
         await pages_queue.join()
         await asyncio.sleep(2.0)
