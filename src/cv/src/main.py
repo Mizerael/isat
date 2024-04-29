@@ -1,12 +1,12 @@
 import logging
 from PIL import Image
 from fastapi import FastAPI, UploadFile
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-import numpy as np
+import httpx
 import cv2
 import io
-from utils import rembg, add_background
+from utils import rembg, add_background, convert_to_cv2_image, find_by_template
 from resources.config import configure_logging, get_config
 
 configure_logging()
@@ -24,6 +24,12 @@ app.add_middleware(
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+client = httpx.AsyncClient(
+    headers={
+        "User-Agent": "learningProject",
+    }
 )
 
 
@@ -45,17 +51,24 @@ async def remove_background(file: UploadFile):
 
 
 @app.post("/paste_to_image")
-async def paste_to_image(background: UploadFile, overlay: UploadFile):
-    background_bytes = await background.read()
-    background_array = np.frombuffer(background_bytes, dtype=np.uint8)
-    background_img = cv2.imdecode(background_array, cv2.IMREAD_UNCHANGED)
-
-    overlay_bytes = await overlay.read()
-    overlay_array = np.frombuffer(overlay_bytes, dtype=np.uint8)
-    overlay_img = cv2.imdecode(overlay_array, cv2.IMREAD_UNCHANGED)
+async def paste_to_image(background_file: UploadFile, overlay_file: UploadFile):
+    background_img = convert_to_cv2_image(image=await background_file.read())
+    overlay_img = convert_to_cv2_image(image=await overlay_file.read())
 
     result_image_bytes = add_background(
         background_img=background_img, overlay_img=overlay_img
     )
 
     return StreamingResponse(io.BytesIO(result_image_bytes), media_type="image/png")
+
+
+@app.post("/find_by_image")
+async def find_by_image(template_file: UploadFile):
+    template_image = convert_to_cv2_image(
+        image=await template_file.read(), flags=cv2.IMREAD_GRAYSCALE
+    )
+    find_images_list = await find_by_template(
+        client=client, app_config=app_config, template=template_image
+    )
+
+    return JSONResponse(content={"images": find_images_list})
