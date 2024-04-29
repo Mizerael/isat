@@ -1,0 +1,57 @@
+{
+    "logger": {
+        "version": 1,
+        "disable_existing_loggers": false,
+        "formatters": {
+            "console": {
+                "class": "logging.Formatter",
+                "datefmt": "%H:%M:%S",
+                "format": "[%(name)s] [%(levelname)s] [%(asctime)s] %(message)s"
+            }
+        },
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "formatter": "console"
+            }
+        },
+        "loggers": {
+            "app": {
+                "handlers": [
+                    "console"
+                ],
+                "level": "DEBUG",
+                "propagate": true
+            },
+            "query": {
+                "filename": "database.log",
+                "handlers": [
+                    "console"
+                ],
+                "level": "INFO"
+            },
+            "crawler": {
+                "filename": "httpx.log",
+                "handlers": [
+                    "console"
+                ],
+                "level": "INFO"
+            },
+            "parser": {
+                "filename": "httpx.log",
+                "handlers": [
+                    "console"
+                ],
+                "level": "INFO"
+            },
+            "cc": {
+                "filename": "httpx.log",
+                "handlers": [
+                    "console"
+                ],
+                "level": "INFO"
+            }
+
+        }
+    }
+}

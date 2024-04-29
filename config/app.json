@@ -1,0 +1,21 @@
+{
+    "query" :{
+        "link": "http://query:8080"
+    },
+    "faiss": {
+        "link": "localhost:8072",
+        "confing": "config/faiss.json"
+    },
+    "crawler": {
+        "link": "http://crawler:8053",
+        "config": "config/crawler.json"
+    },
+    "cc": {
+        "link": "http://complementary-colors:8011"
+    },
+    "loader": {
+        "link": "http://loader:8001",
+        "config": "config/loader.json",
+        "count_worker": 3
+    }
+}

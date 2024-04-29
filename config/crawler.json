@@ -1,0 +1,11 @@
+{
+    "link": "https://steamcommunity.com/market/search?",
+    "link_xhr": "https://steamcommunity.com/market/search/render/?query=",
+    "start": 0,
+    "count": 10,
+    "search_description": 0,
+    "sort_column":"popular",
+    "sort_dir" : "desc",
+    "appid": 730
+
+}

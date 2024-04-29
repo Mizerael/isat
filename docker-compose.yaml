@@ -1,0 +1,37 @@
+services:
+  query:
+    container_name: query
+    build: src/query
+    volumes:
+      - ./config:/app/config
+      - ./resources:/app/resources
+  loader:
+    container_name: loader
+    build: src/loader
+    volumes:
+      - ./config:/app/config
+      - ./resources:/app/resources
+    depends_on:
+      - query
+  complementary-colors:
+    container_name: complementary-colors
+    build: src/complementary_colors
+    volumes:
+      - ./config:/app/config
+      - ./resources:/app/resources
+  crawler:
+    container_name: crawler
+    build: src/crawler
+    volumes:
+      - ./config:/app/config
+      - ./resources:/app/resources
+    depends_on:
+      - query
+  handler:
+    container_name: handler
+    build: src/handler
+    volumes:
+      - ./config:/app/config
+      - ./resources:/app/resources
+    ports:
+      - "8000:8000"
