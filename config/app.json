@@ -10,6 +10,10 @@
         "link": "http://crawler:8053",
         "config": "config/crawler.json"
     },
+    "rembg": {
+        "link": "http://rembg:8041",
+        "config": "config/rembg.json"
+    },
     "cc": {
         "link": "http://complementary-colors:8011"
     },

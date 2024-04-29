@@ -50,6 +50,13 @@
                     "console"
                 ],
                 "level": "INFO"
+            },
+            "rembg": {
+                "filename": "httpx.log",
+                "handlers": [
+                    "console"
+                ],
+                "level": "INFO"
             }
 
         }

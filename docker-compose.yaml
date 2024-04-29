@@ -27,6 +27,14 @@ services:
       - ./resources:/app/resources
     depends_on:
       - query
+  rembg:
+    container_name: rembg
+    build: src/rembg
+    volumes:
+      - ./config:/app/config
+      - ./resources:/app/resources
+    ports:
+      - "8041:8041"
   handler:
     container_name: handler
     build: src/handler
