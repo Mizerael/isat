@@ -51,14 +51,13 @@
                 ],
                 "level": "INFO"
             },
-            "rembg": {
+            "cv": {
                 "filename": "httpx.log",
                 "handlers": [
                     "console"
                 ],
                 "level": "INFO"
             }
-
         }
     }
 }

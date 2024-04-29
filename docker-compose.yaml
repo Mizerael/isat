@@ -27,9 +27,9 @@ services:
       - ./resources:/app/resources
     depends_on:
       - query
-  rembg:
-    container_name: rembg
-    build: src/rembg
+  cv:
+    container_name: cv
+    build: src/cv
     volumes:
       - ./config:/app/config
       - ./resources:/app/resources
